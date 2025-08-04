@@ -1,21 +1,37 @@
 import pygame
 
 pygame.init()
-
-screen = pygame.display.set_mode((1000, 1000))
-pygame.display.set_caption("geometry draw")
-
-def draw_rectangle (height, width, x, y):
-
-    for i in range (y-int(height/2), y+int(height/2)):
-        for j in range (x-int(width/2), x+int(width/2)):
-                if i==y-int(height/2) or j==x-int(width/2) or i==y+int(height/2)-1 or j==x+int(width/2)-1:
-                    screen.set_at((j, i), pygame.Color(255, 30, 30))
-                else:
-                     screen.set_at((j, i), pygame.Color(30, 30, 30))
+HEIGHT = 500
+WIDTH = 500
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Geoulia")
 
 
-            
+def draw_rectan(x, y, length):
+    x = x - length // 2
+    y = y - length // 2
+    for i in range(x, x + length):
+        for j in range(y, y + length):
+            if j == y or i == x or i == x + length - 1 or j == y + length - 1:
+                screen.set_at((i, j), pygame.Color(60, 33, 33))
+            else:
+                screen.set_at((i, j), pygame.Color(255, 255, 255))
+
+
+speedX = 1
+speedY = 2
+
+
+def process_physics(positionX, positionY, HEIGHT, WIDTH):
+    global speedX, speedY
+    if positionX > WIDTH - 50 or positionX < 50:
+        speedX *= -1
+    if positionY > HEIGHT - 50 or positionY < 50:
+        speedY *= -1
+
+
+positionX = 250
+positionY = 250
 
 running = True
 while running:
@@ -23,7 +39,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    draw_rectangle(100, 100, 50,  50)
+    screen.fill(pygame.Color(0, 0, 0))
+
+    draw_rectan(positionX, positionY, 100)
+    process_physics(positionX, positionY, HEIGHT, WIDTH)
+    positionX += speedX
+    positionY += speedY
+
     pygame.display.flip()
 
 pygame.quit()
