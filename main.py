@@ -7,12 +7,12 @@ pygame.display.set_caption("geometry draw")
 
 def draw_rectangle (height, width, x, y):
 
-    for i in range (int(y/2), height+int(y/2)):
-        for j in range (int(x/2), width+int(x/2)):
-                if i==int(y/2) or j==int(x/2) or i==height-1+int(y/2) or j==width-1+int(x/2):
-                    screen.set_at((i, j), pygame.Color(255, 30, 30))
+    for i in range (y-int(height/2), y+int(height/2)):
+        for j in range (x-int(width/2), x+int(width/2)):
+                if i==y-int(height/2) or j==x-int(width/2) or i==y+int(height/2)-1 or j==x+int(width/2)-1:
+                    screen.set_at((j, i), pygame.Color(255, 30, 30))
                 else:
-                     screen.set_at((i, j), pygame.Color(30, 30, 30))
+                     screen.set_at((j, i), pygame.Color(30, 30, 30))
 
 
             
@@ -23,7 +23,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    draw_rectangle(500, 500, 0, 0)
+    draw_rectangle(100, 100, 50,  50)
     pygame.display.flip()
 
 pygame.quit()
