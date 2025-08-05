@@ -1,5 +1,7 @@
 import pygame
 
+import math
+
 pygame.init()
 screen = pygame.display.set_mode((1000, 1000))
 pygame.display.set_caption("Geoulia")
@@ -13,6 +15,13 @@ def draw_rectan(x, y, height, width):
             if j == y or i == x or i == x + width - 1 or j == y + height - 1:
                 screen.set_at((i, j), pygame.Color(60, 33, 33))
             else:
+                screen.set_at((i, j), pygame.Color(255, 255, 255))
+
+def draw_circle(x, y, r):
+    draw_rectan(x, y, r, r)
+    for i in range (x - r, r+x):
+        for j in range (y - r, r+y):
+            if ((i-x)**2 + (j-y)**2 <= r**2):
                 screen.set_at((i, j), pygame.Color(255, 255, 255))
 
 
@@ -43,6 +52,7 @@ while running:
     process_physics(positionX, positionY, 100, 100)
     positionX += speedX
     positionY += speedY
+    draw_circle(250, 250, 50)
 
     pygame.display.flip()
 
