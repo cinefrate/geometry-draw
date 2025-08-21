@@ -1,44 +1,57 @@
 import pygame
 
-import math
+SCREEN_SIZE=1000
 
 pygame.init()
-screen = pygame.display.set_mode((1000, 1000))
-pygame.display.set_caption("Geoulia")
+screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
+pygame.display.set_caption("geometry fail")
 
+class BaseShape :
+    speedX = 1
+    speedY = 1
+    x = 2
+    y = 2
+    size = 50
+    def process_physics(self):
+        if self.x > SCREEN_SIZE - self.size//2 or self.x < self.size//2:
+            self.speedX *= -1
+        if self.y > SCREEN_SIZE - self.size//2 or self.y < self.size//2:
+            self.speedY *= -1
+        self.x+=self.speedX
+        self.y+=self.speedY
 
-def draw_rectan(x, y, height, width):
-    x = x - width // 2
-    y = y - height // 2
-    for i in range(x, x + width):
-        for j in range(y, y + height):
-            if j == y or i == x or i == x + width - 1 or j == y + height - 1:
-                screen.set_at((i, j), pygame.Color(60, 33, 33))
-            else:
-                screen.set_at((i, j), pygame.Color(255, 255, 255))
+    def draw(self):
+        pass
+    def __init__(self, x, y, size, speedX, speedY):
+        self.x=x
+        self.y=y
+        self.size=size
+        self.speedX=speedX
+        self.speedY=speedY
 
-def draw_circle(x, y, r):
-    draw_rectan(x, y, r, r)
-    for i in range (x - r, r+x):
-        for j in range (y - r, r+y):
-            if ((i-x)**2 + (j-y)**2 <= r**2):
-                screen.set_at((i, j), pygame.Color(255, 255, 255))
+class Circle(BaseShape):
+    def draw(self):
+        for i in range (self.x - self.size, self.size+self.x):
+            for j in range (self.y - self.size, self.size+self.y):
+                if ((i-self.x)**2 + (j-self.y)**2 <= self.size**2):
+                    screen.set_at((i, j), pygame.Color(255, 255, 255))
 
+class Square(BaseShape):
+    def draw(self):
+        x = self.x - self.size // 2
+        y = self.y - self.size // 2
+        for i in range(x, x + self.size):
+            for j in range(y, y + self.size):
+                if j == y or i == x or i == x + self.size - 1 or j == y + self.size - 1:
+                    screen.set_at((i, j), pygame.Color(60, 33, 33))
+                else:
+                    screen.set_at((i, j), pygame.Color(255, 255, 255))
 
-speedX = 1
-speedY = 2
-
-
-def process_physics(positionX, positionY, height, width):
-    global speedX, speedY
-    if positionX > 1000 - width//2 or positionX < width//2:
-        speedX *= -1
-    if positionY > 1000 - height//2 or positionY < height//2:
-        speedY *= -1
-
-
-positionX = 250
-positionY = 250
+shapes: list[BaseShape] = [
+    Circle (100, 100, 21, 2, 1),
+    Square (100, 100, 40, 4, 2),
+    Circle (100, 130, 10, -2, 1)
+]
 
 running = True
 while running:
@@ -48,11 +61,9 @@ while running:
 
     screen.fill(pygame.Color(0, 0, 0))
 
-    draw_rectan(positionX, positionY, 100, 100)
-    process_physics(positionX, positionY, 100, 100)
-    positionX += speedX
-    positionY += speedY
-    draw_circle(250, 250, 50)
+    for i in shapes:
+        i.process_physics()
+        i.draw()
 
     pygame.display.flip()
 
